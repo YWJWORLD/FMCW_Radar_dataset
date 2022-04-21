@@ -63,7 +63,7 @@ for snr in snr_vals:
                 tb.run()
                 # del tb
                 raw_output_vector = np.array(snk.data(), dtype=np.complex64)
-                # print(raw_output_vector.shape)
+                print(raw_output_vector.shape)
                 # start the sampler some random time after channel model transients (arbitray values here)
                 sampler_indx = random.randint(50,500)
                 while sampler_indx + vec_length < len(raw_output_vector) and modvec_indx < nvecs_per_key:
