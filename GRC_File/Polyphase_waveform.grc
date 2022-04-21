@@ -1,0 +1,345 @@
+options:
+  parameters:
+    author: ''
+    category: '[Radar Waveform Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: hb
+    hier_block_src_path: '.:'
+    id: polyphase_waveform
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Polyphase Waveform Block
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 28.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: source_amplitude
+    comment: ''
+    freq: samp_freq
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_SIN_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 300.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: source_amplitude
+    comment: ''
+    freq: samp_freq
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_SIN_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 564.0]
+    rotation: 0
+    state: true
+- name: blocks_float_to_complex_0
+  id: blocks_float_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [936, 288.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 184.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_xx_0_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [792, 488.0]
+    rotation: 0
+    state: true
+- name: blocks_repeat_0
+  id: blocks_repeat
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interp: int(samp_rate/samp_freq)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [528, 164.0]
+    rotation: 0
+    state: true
+- name: blocks_repeat_0_0
+  id: blocks_repeat
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interp: int(samp_rate/samp_freq)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 484.0]
+    rotation: 0
+    state: true
+- name: code_length
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Code_Length
+    short_id: ''
+    type: eng_float
+    value: '16'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 44.0]
+    rotation: 0
+    state: true
+- name: epy_block_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport math\n\ndef pol2cart(theta,rho):\n    x =rho\
+      \ * math.cos(theta)\n    y =rho * math.sin(theta)\n    return x, y\n\n\n\nclass\
+      \ blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block\n\
+      \    \"\"\"Embedded Python Block example - a simple multiply const\"\"\"\n\n\
+      \    def __init__(self, code_length = 16, kind_of_signal = \"Frank\"):  # only\
+      \ default arguments here\n        \"\"\"arguments to this function show up as\
+      \ parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n            self,\n\
+      \            name='Polyphase Code Vector Source',   # will show up in GRC\n\
+      \            in_sig=None,\n            out_sig=[np.float32, np.float32]\n  \
+      \      )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.code_length\
+      \ = code_length\n        self.kind = kind_of_signal\n    def work(self, input_items,output_items):\n\
+      \        \"\"\"example: multiply with constant\"\"\"\n\n        freq_step =\
+      \ int(self.code_length ** (1/2))\n\n        if freq_step**2 != self.code_length:\n\
+      \            print(\"Square root of code Length is not integer.\")\n       \
+      \     exit()\n            \n        delta_pi = math.pi / freq_step\n       \
+      \ delta_pi_2 = math.pi / self.code_length\n\n        items = np.zeros((self.code_length,2))\n\
+      \n        if self.kind == \"Frank\":\n            for j in range(1,freq_step+1):\n\
+      \                for i in range(1,freq_step+1):\n                    frank_theta\
+      \ = 2*(i-1)*(j-1)*delta_pi\n                    items[(i-1)+(j-1)*freq_step]\
+      \ = pol2cart(frank_theta, 1)\n\n        elif self.kind == \"P1\":\n        \
+      \    for j in range(1,freq_step+1):\n                for i in range(1,freq_step+1):\n\
+      \                    P1_theta = -(freq_step-(2*j-1))*((j-1)*freq_step+(i-1))*delta_pi\n\
+      \                    items[(i-1)+(j-1)*freq_step] = pol2cart(P1_theta,1)\n\n\
+      \        elif self.kind == \"P2\":\n            for j in range(1,freq_step+1):\n\
+      \                for i in range(1,freq_step+1):\n                    P2_theta\
+      \ = 2*delta_pi*((freq_step+1)/2-i)*((freq_step+1)/2-j)\n                   \
+      \ items[(i-1)+(j-1)*freq_step] = pol2cart(P2_theta,1)                    \n\n\
+      \        elif self.kind == \"P3\":\n            for i in range(1,self.code_length+1):\n\
+      \                P3_theta = ((i-1)*(i-1))*delta_pi_2\n                items[i-1]\
+      \ = pol2cart(P3_theta,1)\n                #print(P3_theta)\n\n        elif self.kind\
+      \ == \"P4\":\n            for i in range(1,self.code_length+1):\n          \
+      \      P4_theta = (i-1)*(i-1-self.code_length)*delta_pi_2\n                items[i-1]\
+      \ = pol2cart(P4_theta,1)\n                #print(P4_theta)            \n   \
+      \     items = np.round(items,3)\n        #print(\"items = {}\".format(items))\n\
+      \        for i in range(len(output_items[0])):\n            output_items[0][i]\
+      \ = items[i%self.code_length][0]\n            output_items[1][i] = items[i%self.code_length][1]\
+      \ \n        return len(output_items[0])\n\n"
+    affinity: ''
+    alias: ''
+    code_length: code_length
+    comment: ''
+    kind_of_signal: kind_of_signal
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Polyphase Code Vector Source', 'blk', [('code_length', '16'), ('kind_of_signal',
+      "'Frank'")], [], [('0', 'float', 1), ('1', 'float', 1)], 'Embedded Python Block
+      example - a simple multiply const', ['code_length'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [96, 320.0]
+    rotation: 0
+    state: true
+- name: kind_of_signal
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Kind of Signal
+    short_id: ''
+    type: str
+    value: Frank
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 44.0]
+    rotation: 0
+    state: true
+- name: pad_sink_0
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: out
+    num_streams: '1'
+    optional: 'False'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1184, 300.0]
+    rotation: 0
+    state: true
+- name: samp_freq
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Sampling Frequency
+    short_id: ''
+    type: ''
+    value: 3.2e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [368, 44.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Sampling Rate
+    short_id: ''
+    type: eng_float
+    value: 32e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 28.0]
+    rotation: 0
+    state: true
+- name: source_amplitude
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Source amplitude
+    short_id: ''
+    type: eng_float
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 36.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '1']
+- [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0_0, '1']
+- [blocks_float_to_complex_0, '0', pad_sink_0, '0']
+- [blocks_multiply_xx_0, '0', blocks_float_to_complex_0, '0']
+- [blocks_multiply_xx_0_0, '0', blocks_float_to_complex_0, '1']
+- [blocks_repeat_0, '0', blocks_multiply_xx_0, '0']
+- [blocks_repeat_0_0, '0', blocks_multiply_xx_0_0, '0']
+- [epy_block_0_0, '0', blocks_repeat_0, '0']
+- [epy_block_0_0, '1', blocks_repeat_0_0, '0']
+
+metadata:
+  file_format: 1

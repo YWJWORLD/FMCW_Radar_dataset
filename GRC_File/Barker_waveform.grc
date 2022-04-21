@@ -1,0 +1,305 @@
+options:
+  parameters:
+    author: ''
+    category: '[Radar Waveform Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: hb
+    hier_block_src_path: '.:'
+    id: Barker_waveform
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Barker Waveform Block
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: code_length
+  id: variable_qtgui_chooser
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Length of code
+    label0: Length of code = 2
+    label1: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    labels: '["2","3", "4",  "5", "7", "11", "13"]'
+    num_opts: '0'
+    option0: '2'
+    option1: '1'
+    option2: '2'
+    option3: '3'
+    option4: '4'
+    options: '[2, 3, 4,5,7,11,13]'
+    orient: Qt.QVBoxLayout
+    type: real
+    value: '2'
+    widget: combo_box
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 92.0]
+    rotation: 0
+    state: disabled
+- name: interp
+  id: variable
+  parameters:
+    comment: ''
+    value: '10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [344, 44.0]
+    rotation: 0
+    state: enabled
+- name: samp_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: samp_rate/interp
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 44.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: source_amplitude
+    comment: ''
+    freq: samp_freq
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_SIN_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 396.0]
+    rotation: 0
+    state: true
+- name: blocks_float_to_complex_0
+  id: blocks_float_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 408.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [624, 296.0]
+    rotation: 0
+    state: true
+- name: blocks_repeat_0_0
+  id: blocks_repeat
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interp: int(samp_rate/samp_freq)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 300.0]
+    rotation: 0
+    state: true
+- name: blocks_vector_source_x_1
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: float
+    vector: (0, 0, 0)
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [544, 500.0]
+    rotation: 0
+    state: true
+- name: code_length
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Length of code
+    short_id: ''
+    type: eng_float
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 20.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nfrom gnuradio import blocks\n\nclass blk(gr.sync_block):\
+      \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
+      \"Embedded Python Block example - a simple multiply const\"\"\"\n\n    def __init__(self,\
+      \ code_length = 2):  # only default arguments here\n        \"\"\"arguments\
+      \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='Barker Code Vector Source',   # will show\
+      \ up in GRC\n            in_sig=None,\n            out_sig=[np.float32]\n  \
+      \      )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.code_length\
+      \ = code_length\n\n    def work(self, input_items,output_items):\n        \"\
+      \"\"example: multiply with constant\"\"\"\n\n        if self.code_length ==\
+      \ 2:\n            items = np.array([1,-1])\n        elif self.code_length ==\
+      \ 3:\n            items = np.array([1,1,-1])\n        elif self.code_length\
+      \ == 4:\n            items = np.array([1,1,-1, 1])\n        elif self.code_length\
+      \ == 5:\n            items = np.array([1,1,1,-1,1])            \n        elif\
+      \ self.code_length == 7:\n            items = np.array([1,1,1,-1,-1,1,-1]) \n\
+      \        elif self.code_length == 11:\n            items = np.array([1,1,1,-1,-1,-1,1,-1,-1,1,-1])\
+      \            \n        elif self.code_length == 13:             \n         \
+      \   items = np.array([1,1,1,1,1,-1,-1,1,1,-1,1,-1,1])\n            \n      \
+      \  for i in range(len(output_items[0])):\n            output_items[0][i] = items[i%self.code_length]\
+      \ \n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    code_length: code_length
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Barker Code Vector Source', 'blk', [('code_length', '2')], [], [('0',
+      'float', 1)], 'Embedded Python Block example - a simple multiply const', ['code_length'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [152, 296.0]
+    rotation: 0
+    state: true
+- name: pad_sink_0
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: out
+    num_streams: '1'
+    optional: 'False'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [960, 420.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Sampling Rate
+    short_id: ''
+    type: eng_float
+    value: 2e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 12.0]
+    rotation: 0
+    state: true
+- name: source_amplitude
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Source amplitude
+    short_id: ''
+    type: eng_float
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 20.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0, '1']
+- [blocks_float_to_complex_0, '0', pad_sink_0, '0']
+- [blocks_multiply_xx_0, '0', blocks_float_to_complex_0, '0']
+- [blocks_repeat_0_0, '0', blocks_multiply_xx_0, '0']
+- [blocks_vector_source_x_1, '0', blocks_float_to_complex_0, '1']
+- [epy_block_0_0, '0', blocks_repeat_0_0, '0']
+
+metadata:
+  file_format: 1

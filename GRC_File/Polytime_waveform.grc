@@ -1,0 +1,418 @@
+options:
+  parameters:
+    author: ''
+    category: '[Radar Waveform Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: hb
+    hier_block_src_path: '.:'
+    id: Polytimewaveform
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Polytime waveform Block
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 20.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: Kind_of_signal
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: kind of signal
+    short_id: ''
+    type: str
+    value: T1
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 20.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: source_amplitude
+    comment: ''
+    freq: signal_freq
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_SIN_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 180.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: source_amplitude
+    comment: ''
+    freq: signal_freq
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_SIN_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [440, 404.0]
+    rotation: 0
+    state: enabled
+- name: blocks_float_to_complex_0
+  id: blocks_float_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 424.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 280.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_0_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [672, 544.0]
+    rotation: 0
+    state: enabled
+- name: blocks_repeat_0
+  id: blocks_repeat
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interp: int(interp)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [440, 628.0]
+    rotation: 0
+    state: enabled
+- name: blocks_repeat_0_0
+  id: blocks_repeat
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interp: int(interp)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 324.0]
+    rotation: 0
+    state: enabled
+- name: center_freq
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: center frequency
+    short_id: ''
+    type: eng_float
+    value: 910e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1088, 20.0]
+    rotation: 0
+    state: true
+- name: delta_f
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Delta F
+    short_id: ''
+    type: ''
+    value: '2000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [232, 116.0]
+    rotation: 0
+    state: true
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport math\n\ndef pol2cart(theta,rho):\n    x =rho\
+      \ * math.cos(theta)\n    y =rho * math.sin(theta)\n    return x, y\n\n\nclass\
+      \ blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block\n\
+      \    \"\"\"Embedded Python Block example - a simple multiply const\"\"\"\n\n\
+      \    def __init__(self, kind_of_signal = \"T1\",number_of_segment = 4,phase_state\
+      \ = 2, delta_f = 2000, t_seg = 0.004, t_interval = 1e-4):  # only default arguments\
+      \ here\n        \"\"\"arguments to this function show up as parameters in GRC\"\
+      \"\"\n        gr.sync_block.__init__(\n            self,\n            name='Polytime\
+      \ Code Vector Source',   # will show up in GRC\n            in_sig=None,\n \
+      \           out_sig=[np.float32, np.float32]\n        )\n        # if an attribute\
+      \ with the same name as a parameter is found,\n        # a callback is registered\
+      \ (properties work, too).\n        self.k = k = number_of_segment\n        self.kind\
+      \ = kind_of_signal\n        self.n = phase_state\n        self.delta_f = delta_f\n\
+      \        self.t_interval = t_interval\n        self.t_seg = 0.004\n        self.T\
+      \ = self.t_seg * k\n        self.t_vector = np.arange(0,self.T,self.t_interval)\n\
+      \        self.seg_len = int(len(self.t_vector)/k)\n        \n\n    def work(self,\
+      \ input_items, output_items):\n        \"\"\"example: multiply with constant\"\
+      \"\"\n        items = np.zeros((len(self.t_vector),2))\n        if self.kind\
+      \ == 'T1':\n            for j in range(0,self.k,1):\n                for time\
+      \ in range(0,self.seg_len):\n                    T1_theta = np.mod((2*math.pi/self.n)*math.floor((self.k*self.t_vector[(j*self.seg_len)+time]-j*self.T)*j*self.n/self.T),2*math.pi)\n\
+      \                    items[j*self.seg_len+time] = pol2cart(T1_theta,1)\n   \
+      \     \n        elif self.kind == 'T2':\n            for j in range(0,self.k,1):\n\
+      \                for time in range(0,self.seg_len):\n                    T2_theta\
+      \ = np.mod((2*math.pi/self.n)*math.floor((self.k*self.t_vector[(j*self.seg_len)+time]-j*self.T)*(2*j-self.k+1)/self.T*self.n/2),2*math.pi)\n\
+      \                    items[j*self.seg_len+time] = pol2cart(T2_theta,1)\n\n \
+      \       elif self.kind == 'T3':\n            for j in range(0,self.k,1):\n \
+      \               for time in range(0,self.seg_len):\n                    T3_theta\
+      \ = np.mod((2*math.pi/self.n)*math.floor((self.n*self.delta_f*math.pow(self.t_vector[(j*self.seg_len)+time],2))/(2*self.T)),2*math.pi)\n\
+      \                    items[j*self.seg_len+time] = pol2cart(T3_theta,1)\n\n \
+      \       elif self.kind == 'T4':\n            for j in range(0,self.k,1):\n \
+      \               for time in range(0,self.seg_len):\n                    T4_theta\
+      \ = np.mod((2*math.pi/self.n)*math.floor((self.n*self.delta_f*math.pow(self.t_vector[(j*self.seg_len)+time],2))/(2*self.T)-(self.n*self.delta_f*self.t_vector[(j*self.seg_len)+time]/2)),2*math.pi)\n\
+      \                    items[j*self.seg_len+time] = pol2cart(T4_theta,1)     \
+      \       \n        \n        items = np.round(items,3)\n        \n        for\
+      \ i in range(len(output_items[0])):\n            output_items[0][i] = items[i%len(self.t_vector)][0]\n\
+      \            output_items[1][i] = items[i%len(self.t_vector)][1] \n        return\
+      \ len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    delta_f: delta_f
+    kind_of_signal: Kind_of_signal
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    number_of_segment: segment
+    phase_state: phase_state
+    t_interval: '0.0001'
+    t_seg: '0.004'
+  states:
+    _io_cache: ('Polytime Code Vector Source', 'blk', [('kind_of_signal', "'T1'"),
+      ('number_of_segment', '4'), ('phase_state', '2'), ('delta_f', '2000'), ('t_seg',
+      '0.004'), ('t_interval', '0.0001')], [], [('0', 'float', 1), ('1', 'float',
+      1)], 'Embedded Python Block example - a simple multiply const', ['delta_f',
+      't_interval', 't_seg'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [136, 348.0]
+    rotation: 0
+    state: true
+- name: interp
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: interpolation
+    short_id: ''
+    type: eng_float
+    value: 2e6/500e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 20.0]
+    rotation: 0
+    state: true
+- name: pad_sink_0
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: out
+    num_streams: '1'
+    optional: 'False'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [976, 436.0]
+    rotation: 0
+    state: true
+- name: phase_state
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Phase state
+    short_id: ''
+    type: intx
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 20.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Sample_rate
+    short_id: ''
+    type: eng_float
+    value: 2e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 20.0]
+    rotation: 0
+    state: true
+- name: segment
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Number of segment
+    short_id: ''
+    type: ''
+    value: '4'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 20.0]
+    rotation: 0
+    state: true
+- name: signal_freq
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Signal Frequency
+    short_id: ''
+    type: eng_float
+    value: 2e6/4
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 20.0]
+    rotation: 0
+    state: true
+- name: source_amplitude
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Source Amplitude
+    short_id: ''
+    type: eng_float
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1240, 20.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '0']
+- [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0_0, '0']
+- [blocks_float_to_complex_0, '0', pad_sink_0, '0']
+- [blocks_multiply_xx_0, '0', blocks_float_to_complex_0, '0']
+- [blocks_multiply_xx_0_0, '0', blocks_float_to_complex_0, '1']
+- [blocks_repeat_0, '0', blocks_multiply_xx_0_0, '1']
+- [blocks_repeat_0_0, '0', blocks_multiply_xx_0, '1']
+- [epy_block_0, '0', blocks_repeat_0_0, '0']
+- [epy_block_0, '1', blocks_repeat_0, '0']
+
+metadata:
+  file_format: 1
