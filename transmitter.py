@@ -4,7 +4,7 @@ from scipy import random
 from gnuradio import analog, blocks, gr ,filter
 from gnuradio.filter import firdes
 # from gnuradio.filter import firdes
-import epy_block_0, epy_block_0_0
+import epy_block_costas, epy_block_barker, epy_block_polytime, epy_block_polyphase
 import sys
 import signal
 
@@ -71,7 +71,7 @@ class transmitter_barker(gr.hier_block2):
         ##################################################
         self.skip = blocks.skiphead(gr.sizeof_gr_complex,random.randint(1,1000000))
         self.limit = blocks.head(gr.sizeof_gr_complex,limit)
-        self.epy_block_0_0 = epy_block_0_0.blk(code_length=code_length)
+        self.epy_block_barker = epy_block_barker.blk(code_length=code_length)
         self.blocks_vector_source_x_1 = blocks.vector_source_f((0, 0, 0), True, 1, [])
         self.blocks_repeat_0_0 = blocks.repeat(gr.sizeof_float*1, int(samp_rate/samp_freq))
         self.blocks_multiply_xx_0 = blocks.multiply_vff(1)
@@ -87,7 +87,7 @@ class transmitter_barker(gr.hier_block2):
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_float_to_complex_0, 0))
         self.connect((self.blocks_repeat_0_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.blocks_vector_source_x_1, 0), (self.blocks_float_to_complex_0, 1))
-        self.connect((self.epy_block_0_0, 0), (self.blocks_repeat_0_0, 0))
+        self.connect((self.self.epy_block_barker, 0), (self.blocks_repeat_0_0, 0))
 
 class transmitter_costas(gr.hier_block2):
     modname = 'Costas'
@@ -117,7 +117,7 @@ class transmitter_costas(gr.hier_block2):
         ##################################################
         self.skip = blocks.skiphead(gr.sizeof_gr_complex,random.randint(1,1000000))
         self.limit = blocks.head(gr.sizeof_gr_complex,limit)
-        self.epy_block_0 = epy_block_0.blk(primitive_root=primitive_root, prime_number=prime_number)
+        self.epy_block_costas = epy_block_costas.blk(primitive_root=primitive_root, prime_number=prime_number)
         self.blocks_vco_f_0 = blocks.vco_f(samp_rate, samp_rate, source_amplitude)
         self.blocks_repeat_0 = blocks.repeat(gr.sizeof_float*1, int(seq_len / (prime_number-1)))
         self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
@@ -130,7 +130,7 @@ class transmitter_costas(gr.hier_block2):
         self.connect((self.blocks_repeat_0, 0), (self.blocks_vco_f_0, 0))
         self.connect((self.blocks_vco_f_0, 0), (self.blocks_float_to_complex_0, 1))
         self.connect((self.blocks_vco_f_0, 0), (self.blocks_float_to_complex_0, 0))
-        self.connect((self.epy_block_0, 0), (self.blocks_repeat_0, 0))
+        self.connect((self.epy_block_costas, 0), (self.blocks_repeat_0, 0))
 
 class transmitter_polyphase(gr.hier_block2):
     def __init__(self, code_length=16, kind_of_signal='Frank', samp_freq=2e6/4, samp_rate=2e6, source_amplitude=1,limit=10000):
@@ -154,7 +154,7 @@ class transmitter_polyphase(gr.hier_block2):
         ##################################################
         self.skip = blocks.skiphead(gr.sizeof_gr_complex,random.randint(1,1000000))
         self.limit = blocks.head(gr.sizeof_gr_complex,limit)
-        self.epy_block_0_0 = epy_block_0_0.blk(code_length=code_length, kind_of_signal=kind_of_signal)
+        self.epy_block_polyphase = epy_block_polyphase.blk(code_length=code_length, kind_of_signal=kind_of_signal)
         self.blocks_repeat_0_0 = blocks.repeat(gr.sizeof_float*1, int(samp_rate/samp_freq))
         self.blocks_repeat_0 = blocks.repeat(gr.sizeof_float*1, int(samp_rate/samp_freq))
         self.blocks_multiply_xx_0_0 = blocks.multiply_vff(1)
@@ -174,8 +174,8 @@ class transmitter_polyphase(gr.hier_block2):
         self.connect((self.blocks_multiply_xx_0_0, 0), (self.blocks_float_to_complex_0, 1))
         self.connect((self.blocks_repeat_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.blocks_repeat_0_0, 0), (self.blocks_multiply_xx_0_0, 0))
-        self.connect((self.epy_block_0_0, 0), (self.blocks_repeat_0, 0))
-        self.connect((self.epy_block_0_0, 1), (self.blocks_repeat_0_0, 0))
+        self.connect((self.epy_block_polyphase, 0), (self.blocks_repeat_0, 0))
+        self.connect((self.epy_block_polyphase, 1), (self.blocks_repeat_0_0, 0))
 
 class transmitter_frank(transmitter_polyphase):
     modname = 'Frank'
@@ -229,7 +229,7 @@ class transmitter_polytime(gr.hier_block2):
         ##################################################
         self.skip = blocks.skiphead(gr.sizeof_gr_complex,random.randint(1,1000000))
         self.limit = blocks.head(gr.sizeof_gr_complex,limit)
-        self.epy_block_0 = epy_block_0.blk(kind_of_signal=Kind_of_signal, number_of_segment=segment, phase_state=phase_state, delta_f=delta_f, t_seg=0.004, t_interval=0.0001)
+        self.epy_block_polytime = epy_block_polytime.blk(kind_of_signal=Kind_of_signal, number_of_segment=segment, phase_state=phase_state, delta_f=delta_f, t_seg=0.004, t_interval=0.0001)
         self.blocks_repeat_0_0 = blocks.repeat(gr.sizeof_float*1, int(interp))
         self.blocks_repeat_0 = blocks.repeat(gr.sizeof_float*1, int(interp))
         self.blocks_multiply_xx_0_0 = blocks.multiply_vff(1)
@@ -250,8 +250,8 @@ class transmitter_polytime(gr.hier_block2):
         self.connect((self.blocks_multiply_xx_0_0, 0), (self.blocks_float_to_complex_0, 1))
         self.connect((self.blocks_repeat_0, 0), (self.blocks_multiply_xx_0_0, 1))
         self.connect((self.blocks_repeat_0_0, 0), (self.blocks_multiply_xx_0, 1))
-        self.connect((self.epy_block_0, 1), (self.blocks_repeat_0, 0))
-        self.connect((self.epy_block_0, 0), (self.blocks_repeat_0_0, 0))
+        self.connect((self.epy_block_polytime, 1), (self.blocks_repeat_0, 0))
+        self.connect((self.epy_block_polytime, 0), (self.blocks_repeat_0_0, 0))
 
 class transmitter_T1(transmitter_polytime):
     modname = 'T1'
@@ -277,9 +277,9 @@ class transmitter_T4(transmitter_polytime):
 transmitters = {
     "FMCW_Polyphase":[transmitter_frank,transmitter_P1,transmitter_P2,transmitter_P3,transmitter_P4],
     "FMCW_LFM":[transmitter_LFM],
-    
     "FMCW_Polytime":[transmitter_T1,transmitter_T2,transmitter_T3,transmitter_T4],
-    "FMCW_Barker":[transmitter_barker],
     "FMCW_Costas":[transmitter_costas],
+    "FMCW_Barker":[transmitter_barker],
+    
     
 }
