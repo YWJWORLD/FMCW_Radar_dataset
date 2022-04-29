@@ -1,3 +1,4 @@
+from ast import Pass
 from transmitter import transmitters
 from gnuradio import channels, gr, blocks
 import numpy as np
@@ -17,8 +18,8 @@ dataset = {}
 # The output format looks like this
 # {('mod type', SNR): np.array(nvecs_per_key, 2, vec_length), etc}
 
-nvecs_per_key = 500
-vec_length = 2048
+nvecs_per_key = 5
+vec_length = 1024
 samp_rate = 2e6
 snr_vals = range(-20,12,2)
 for snr in snr_vals:
@@ -32,22 +33,38 @@ for snr in snr_vals:
             modvec_indx = 0
             while insufficient_modsnr_vectors:
                 if fmcw_type == "FMCW_LFM":
+                    
                     src_mod = mod_type(amp=1,offset=0,samp_rate=samp_rate)
                 elif fmcw_type == "FMCW_Barker":
                     src_mod = mod_type(code_length = 13)
                 elif fmcw_type == "FMCW_Costas":
+                    
                     src_mod = mod_type(prime_number=11, primitive_root=2, samp_rate=samp_rate)
                 elif fmcw_type == "FMCW_Polyphase":
-                    src_mod = mod_type(code_length = 16,kind_of_signal = mod_type.modname)
+                    src_mod = mod_type(signal_freq = samp_rate/20,code_length = 16,kind_of_signal = mod_type.modname)
                 elif fmcw_type == "FMCW_Polytime":
-                    src_mod = mod_type(Kind_of_signal = mod_type.modname,delta_f=samp_rate/20, phase_state = 2, segment = 4)
+                    src_mod = mod_type(Kind_of_signal = mod_type.modname,delta_f=2000, phase_state = 2, segment = 4)
                 # print(src_mod)
                 fD = 1
                 delays = [0.0, 0.9, 1.7]
                 mags = [1, 0.8, 0.3]
                 ntaps = 8
                 noise_amp = 10**(-snr/10.0)
-                chan = channels.dynamic_channel_model(200e3, 0.01, 50, .01, 0.5e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337)
+                chan = channels.dynamic_channel_model(
+                    200e3,  # samp rate
+                    0.01,   # SRO Standard Deviation Hz per sample
+                    50,     # Max SRO Bound Hz
+                    .01,    # CFO Standard Deviation Hz per sample
+                    0.5e3,  # Max CFO Bound Hz
+                    8,      # Num Sinusoids(SoS model)
+                    fD,     # Max Doppler Freq(Hz)
+                    True,   # LOS/Rician(True) , NLOS/Rayleigh(False)
+                    4,      # K : Rician K-factor, the ratio of specular to diffuse power in the model
+                    delays, # delays : A list of fractional sample delays making up the power delay profile
+                    mags,   # mags : A list of magnitudes corresponding to each delay time in the power delay profile
+                    ntaps,  # ntaps_mpath : The length of the filter to interpolate the power delay profile over. Delays in the PDP
+                    noise_amp, # noise_amp : Specifies the standard deviation of the AWGN process
+                    0x1337) #    noise_seed : A random number generator seed for the noise source.
                 # print("check...1")
                 snk = blocks.vector_sink_c()
                 # print("check...2")
@@ -81,6 +98,6 @@ for snr in snr_vals:
 
 
 print("all done. writing to disk")
-with open('FMCW_RADAR2022_dict_ver2.pkl','wb') as f:
+with open('FMCW_RADAR2022_dict_ver5.pkl','wb') as f:
     pickle.dump(dataset, f)
 

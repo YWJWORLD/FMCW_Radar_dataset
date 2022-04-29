@@ -87,7 +87,7 @@ class transmitter_barker(gr.hier_block2):
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_float_to_complex_0, 0))
         self.connect((self.blocks_repeat_0_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.blocks_vector_source_x_1, 0), (self.blocks_float_to_complex_0, 1))
-        self.connect((self.self.epy_block_barker, 0), (self.blocks_repeat_0_0, 0))
+        self.connect((self.epy_block_barker, 0), (self.blocks_repeat_0_0, 0))
 
 class transmitter_costas(gr.hier_block2):
     modname = 'Costas'
@@ -133,7 +133,7 @@ class transmitter_costas(gr.hier_block2):
         self.connect((self.epy_block_costas, 0), (self.blocks_repeat_0, 0))
 
 class transmitter_polyphase(gr.hier_block2):
-    def __init__(self, code_length=16, kind_of_signal='Frank', samp_freq=2e6/4, samp_rate=2e6, source_amplitude=1,limit=10000):
+    def __init__(self, code_length=16, kind_of_signal='Frank', signal_freq=2e6/20, samp_rate=2e6, source_amplitude=1,limit=10000):
         gr.hier_block2.__init__(
             self, "Polyphase Waveform Block",
                 gr.io_signature(0, 0, 0),
@@ -145,7 +145,7 @@ class transmitter_polyphase(gr.hier_block2):
         ##################################################
         self.code_length = code_length
         self.kind_of_signal = kind_of_signal
-        self.samp_freq = samp_freq
+        self.signal_freq = signal_freq
         self.samp_rate = samp_rate
         self.source_amplitude = source_amplitude
 
@@ -155,13 +155,13 @@ class transmitter_polyphase(gr.hier_block2):
         self.skip = blocks.skiphead(gr.sizeof_gr_complex,random.randint(1,1000000))
         self.limit = blocks.head(gr.sizeof_gr_complex,limit)
         self.epy_block_polyphase = epy_block_polyphase.blk(code_length=code_length, kind_of_signal=kind_of_signal)
-        self.blocks_repeat_0_0 = blocks.repeat(gr.sizeof_float*1, int(samp_rate/samp_freq))
-        self.blocks_repeat_0 = blocks.repeat(gr.sizeof_float*1, int(samp_rate/samp_freq))
+        self.blocks_repeat_0_0 = blocks.repeat(gr.sizeof_float*1, int(samp_rate/signal_freq))
+        self.blocks_repeat_0 = blocks.repeat(gr.sizeof_float*1, int(samp_rate/signal_freq))
         self.blocks_multiply_xx_0_0 = blocks.multiply_vff(1)
         self.blocks_multiply_xx_0 = blocks.multiply_vff(1)
         self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
-        self.analog_sig_source_x_0_0 = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE, samp_freq, source_amplitude, 0, 0)
-        self.analog_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE, samp_freq, source_amplitude, 0, 0)
+        self.analog_sig_source_x_0_0 = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE, signal_freq, source_amplitude, 0, 0)
+        self.analog_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE, signal_freq, source_amplitude, 0, 0)
 
 
         ##################################################
@@ -179,28 +179,28 @@ class transmitter_polyphase(gr.hier_block2):
 
 class transmitter_frank(transmitter_polyphase):
     modname = 'Frank'
-    def __init__(self, code_length,limit=10000, kind_of_signal=modname,samp_freq=2e6/4,  samp_rate=2e6,  source_amplitude=1):
-        super().__init__(code_length, kind_of_signal, samp_freq, samp_rate, source_amplitude,limit)
+    def __init__(self, signal_freq, code_length=16,limit=10000, kind_of_signal=modname, samp_rate=2e6,  source_amplitude=1):
+        super().__init__(code_length, kind_of_signal, signal_freq, samp_rate, source_amplitude,limit)
 
 class transmitter_P1(transmitter_polyphase):
     modname = 'P1'
-    def __init__(self, code_length=16,limit=10000, kind_of_signal=modname, samp_freq=2e6/4, samp_rate=2e6, source_amplitude=1):
-        super().__init__(code_length, kind_of_signal, samp_freq, samp_rate, source_amplitude,limit)
+    def __init__(self, signal_freq,code_length=16,limit=10000, kind_of_signal=modname, samp_rate=2e6, source_amplitude=1):
+        super().__init__(code_length, kind_of_signal, signal_freq, samp_rate, source_amplitude,limit)
 
 class transmitter_P2(transmitter_polyphase):
     modname = 'P2'
-    def __init__(self, code_length=16,limit=10000, kind_of_signal=modname, samp_freq=2e6/4, samp_rate=2e6, source_amplitude=1):
-        super().__init__(code_length, kind_of_signal, samp_freq, samp_rate, source_amplitude,limit)
+    def __init__(self, signal_freq,code_length=16,limit=10000, kind_of_signal=modname, samp_rate=2e6, source_amplitude=1):
+        super().__init__(code_length, kind_of_signal, signal_freq, samp_rate, source_amplitude,limit)
 
 class transmitter_P3(transmitter_polyphase):
     modname = 'P3'
-    def __init__(self, code_length=16,limit=10000, kind_of_signal=modname, samp_freq=2e6/4, samp_rate=2e6, source_amplitude=1):
-        super().__init__(code_length, kind_of_signal, samp_freq, samp_rate, source_amplitude,limit)
+    def __init__(self, signal_freq, code_length=16,limit=10000, kind_of_signal=modname, samp_rate=2e6, source_amplitude=1):
+        super().__init__(code_length, kind_of_signal, signal_freq, samp_rate, source_amplitude,limit)
 
 class transmitter_P4(transmitter_polyphase):
     modname = 'P4'
-    def __init__(self, code_length=16,limit=10000, kind_of_signal=modname, samp_freq=2e6/4, samp_rate=2e6, source_amplitude=1):
-        super().__init__(code_length, kind_of_signal, samp_freq, samp_rate, source_amplitude,limit)
+    def __init__(self, code_length=16,limit=10000, kind_of_signal=modname, signal_freq=2e6/4, samp_rate=2e6, source_amplitude=1):
+        super().__init__(code_length, kind_of_signal, signal_freq, samp_rate, source_amplitude,limit)
 
 
 class transmitter_polytime(gr.hier_block2):
