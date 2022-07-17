@@ -280,6 +280,4 @@ transmitters = {
     "FMCW_Polytime":[transmitter_T1,transmitter_T2,transmitter_T3,transmitter_T4],
     "FMCW_Costas":[transmitter_costas],
     "FMCW_Barker":[transmitter_barker],
-    
-    
 }
